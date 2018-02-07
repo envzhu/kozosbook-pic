@@ -94,6 +94,7 @@ int main(void)
 	puts("starting from entry point: ");
 	putxval((unsigned long)entry_point, 0);
 	puts("\n");
+  init_BMX();
 	f = (void (*)(void))entry_point;
 	f(); /* ここで，ロードしたプログラムに処理を渡す */
 	/* ここには返ってこない */
