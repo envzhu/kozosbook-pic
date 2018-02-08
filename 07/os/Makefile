@@ -14,8 +14,8 @@ RANLIB  = $(ADDNAME)ranlib
 STRIP   = $(ADDNAME)strip
 BIN2HEX = $(ADDNAME)bin2hex
 
-
-OBJS  = startup.o main.o lib.o serial.o
+OBJS  = startup.o main.o interrupt.o
+OBJS += lib.o serial.o
 
 TARGET = kozos
 

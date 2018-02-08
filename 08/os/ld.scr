@@ -21,7 +21,7 @@ MEMORY
 SECTIONS
 {
 	.softvec : {
-	softvec = .;
+		softvec = .;
 	} > softvec
 
 	.rodata : {

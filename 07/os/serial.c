@@ -176,3 +176,71 @@ unsigned char serial_recv_byte(int index)
 
   return c;
 }
+
+/* 送信割込み有効か？ */
+int serial_intr_is_send_enable(int index)
+{
+  if(index==0)
+    return (IEC1 & PIC_SCI1_SEND_INTTERUPT_ENABLE) ? 1 : 0;;
+  
+  if(index==1)
+    return (IEC1 & PIC_SCI2_SEND_INTTERUPT_ENABLE) ? 1 : 0;
+
+  return -1;
+}
+
+/* 送信割込み有効化 */
+void serial_intr_send_enable(int index)
+{
+  if(index==0)
+    IEC1SET=PIC_SCI1_SEND_INTTERUPT_FLAG;
+  
+  if(index==1)
+    IEC1SET=PIC_SCI2_SEND_INTTERUPT_FLAG;
+
+}
+
+/* 送信割込み無効化 */
+void serial_intr_send_disable(int index)
+{
+  if(index==0)
+    IEC1CLR=PIC_SCI1_SEND_INTTERUPT_FLAG;
+  
+  if(index==1)
+    IEC1CLR=PIC_SCI2_SEND_INTTERUPT_FLAG;
+
+}
+
+/* 受信割込み有効か？ */
+int serial_intr_is_recv_enable(int index)
+{
+  if(index==0)
+    return (IEC1 & PIC_SCI1_RECV_INTTERUPT_ENABLE) ? 1 : 0;;
+  
+  if(index==1)
+    return (IEC1 & PIC_SCI2_RECV_INTTERUPT_ENABLE) ? 1 : 0;
+
+  return -1;
+}
+
+/* 受信割込み有効化 */
+void serial_intr_recv_enable(int index)
+{
+  if(index==0)
+    IEC1SET=PIC_SCI1_RECV_INTTERUPT_FLAG;
+  
+  if(index==1)
+    IEC1SET=PIC_SCI2_RECV_INTTERUPT_FLAG;
+
+}
+
+/* 受信割込み無効化 */
+void serial_intr_recv_disable(int index)
+{
+  if(index==0)
+    IEC1CLR=PIC_SCI1_RECV_INTTERUPT_FLAG;
+  
+  if(index==1)
+    IEC1CLR=PIC_SCI2_RECV_INTTERUPT_FLAG;
+
+}
