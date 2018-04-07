@@ -54,8 +54,5 @@ image :	$(TARGET).hex
 write:	$(TARGET).hex
 	$(PIC32PROG) $(TARGET).hex
 
-obj_clean :
-		rm -f $(OBJS)
-
 clean :
 		rm -f $(OBJS) $(TARGET) $(TARGET).elf $(TARGET).hex
