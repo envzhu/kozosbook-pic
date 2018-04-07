@@ -59,16 +59,40 @@ intr_softerr:
   sw $1,($sp)
 
   li $a0,SOFTVEC_TYPE_SOFTERR
+  move $a1,$sp
 
 	jal	interrupt
   nop
 
+  /* 今後、多重割り込みに対応した時の為に、一応割り込みを禁止にする */
+  di
+
+  /*実行ハザードが解消されるまで待つ */
+  ehb
+
+
+  /* STATUSレジスタをスタックから復元 */
+  lw	$k0, 136($sp)
+  mtc0	$k0, $12
+
+  /* EPCレジスタをスタックから復元 */
+  lw	$k0, 132($sp)
+  mtc0	$k0, $14
+  
+  /* hiレジスタをスタックから復元 */
+  lw	$k0, 128($sp)
+  mthi	$k0
+  
+  /* loレジスタをスタックから復元 */
+  lw	$k0, 124($sp)
+  mtlo	$k0
+
   lw $31,120($sp)
   lw $30,116($sp)
-  lw $29,112($sp)
+  /*lw $29,112($sp)*/
   lw $28,108($sp)
-  lw $27,104($sp)
-  lw $26,100($sp)
+  /* skip $27 */   /* $k0と$k1レジスタは、OSカーネル用に予約されており  */
+  /* skip $26 */   /* 保存しておく必要はない*/
   lw $25,96($sp)
   lw $24,92($sp)
   lw $23,88($sp)
@@ -95,29 +119,11 @@ intr_softerr:
   lw $2,4($sp)
   lw $1,($sp)
 
-
-
-  di                      /* disable interrupts - just in case ? where enabled ? */
-  ehb
-
-  lw	$k0, 124($sp)
-  mtlo	$k0       /*lo*/
-
-  lw	$k0, 128($sp)
-  mthi	$k0       /*hi*/
-
-  lw	$k0, 132($sp)       /* restore EPC from stack */
-  mtc0	$k0, $14
-
-
-  lw	$k0, 136($sp)
-   /* restore stack pointer */
-  mtc0	$k0, $12
-
   addiu	$sp, $sp, 140
 
   eret
   nop
+
 
 .set noreorder
 .global intr_syscall
@@ -178,16 +184,42 @@ intr_syscall:
   sw $1,($sp)
 
   li $a0,SOFTVEC_TYPE_SYSCALL
+  move $a1,$sp
 
 	jal	interrupt
   nop
 
+
+  /* 今後、多重割り込みに対応した時の為に、一応割り込みを禁止にする */
+  di
+
+  /*実行ハザードが解消されるまで待つ */
+  ehb
+
+  lw	$sp,0($a0)
+
+  /* STATUSレジスタをスタックから復元 */
+  lw	$k0, 136($sp)
+  mtc0	$k0, $12
+
+  /* EPCレジスタをスタックから復元 */
+  lw	$k0, 132($sp)
+  mtc0	$k0, $14
+  
+  /* hiレジスタをスタックから復元 */
+  lw	$k0, 128($sp)
+  mthi	$k0
+  
+  /* loレジスタをスタックから復元 */
+  lw	$k0, 124($sp)
+  mtlo	$k0
+
   lw $31,120($sp)
   lw $30,116($sp)
-  lw $29,112($sp)
+  /*lw $29,112($sp)*/
   lw $28,108($sp)
-  lw $27,104($sp)
-  lw $26,100($sp)
+  /* skip $27 */   /* $k0と$k1レジスタは、OSカーネル用に予約されており  */
+  /* skip $26 */   /* 保存しておく必要はない*/
   lw $25,96($sp)
   lw $24,92($sp)
   lw $23,88($sp)
@@ -214,27 +246,7 @@ intr_syscall:
   lw $2,4($sp)
   lw $1,($sp)
 
-
-
-  di                      /* disable interrupts - just in case ? where enabled ? */
-  ehb
-
-  lw	$k0, 124($sp)
-  mtlo	$k0       /*lo*/
-
-  lw	$k0, 128($sp)
-  mthi	$k0       /*hi*/
-
-  lw	$k0, 132($sp)       /* restore EPC from stack */
-  mtc0	$k0, $14
-
-
-  lw	$k0, 136($sp)
-   /* restore stack pointer */
-  mtc0	$k0, $12
-
- addiu	$sp, $sp, 140
-
+  addiu	$sp, $sp, 140
 
   eret
   nop
@@ -294,16 +306,41 @@ intr_syscall:
   sw $1,($sp)
 
 	li $a0,SOFTVEC_TYPE_SERINTR
+  move $a1,$sp
 
 	jal	interrupt
   nop
 
+  /* 今後、多重割り込みに対応した時の為に、一応割り込みを禁止にする */
+  di
+
+  /*実行ハザードが解消されるまで待つ */
+  ehb
+
+  lw	$sp,0($a0)
+
+  /* STATUSレジスタをスタックから復元 */
+  lw	$k0, 136($sp)
+  mtc0	$k0, $12
+
+  /* EPCレジスタをスタックから復元 */
+  lw	$k0, 132($sp)
+  mtc0	$k0, $14
+  
+  /* hiレジスタをスタックから復元 */
+  lw	$k0, 128($sp)
+  mthi	$k0
+  
+  /* loレジスタをスタックから復元 */
+  lw	$k0, 124($sp)
+  mtlo	$k0
+
   lw $31,120($sp)
   lw $30,116($sp)
-  lw $29,112($sp)
+  /*lw $29,112($sp)*/
   lw $28,108($sp)
-  lw $27,104($sp)
-  lw $26,100($sp)
+  /* skip $27 */   /* $k0と$k1レジスタは、OSカーネル用に予約されており  */
+  /* skip $26 */   /* 保存しておく必要はない*/
   lw $25,96($sp)
   lw $24,92($sp)
   lw $23,88($sp)
@@ -329,23 +366,6 @@ intr_syscall:
   lw $3,8($sp)
   lw $2,4($sp)
   lw $1,($sp)
-
-  di                      /* disable interrupts - just in case ? where enabled ? */
-  ehb
-
-  lw	$k0, 124($sp)
-  mtlo	$k0       /*lo*/
-
-  lw	$k0, 128($sp)
-  mthi	$k0       /*hi*/
-
-  lw	$k0, 132($sp)       /* restore EPC from stack */
-  mtc0	$k0, $14
-
-
-  lw	$k0, 136($sp)
-   /* restore stack pointer */
-  mtc0	$k0, $12
 
   addiu	$sp, $sp, 140
 
